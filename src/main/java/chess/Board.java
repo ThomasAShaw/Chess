@@ -13,15 +13,15 @@ public class Board {
 
     public Board(){
 
-        // black Rooks initialize
+        // Black Rooks initialize
         board[0][0] = new Piece(false, PieceType.ROOK);
         board[0][7] = new Piece(false, PieceType.ROOK);
 
-        // black Knights initialize
+        // Black Knights initialize
         board[0][1] = new Piece(false, PieceType.KNIGHT);
         board[0][6] = new Piece(false, PieceType.KNIGHT);
 
-        // black Bishops initialize
+        // Black Bishops initialize
         board[0][2] = new Piece(false, PieceType.BISHOP);
         board[0][5] = new Piece(false, PieceType.BISHOP);
 
@@ -60,19 +60,19 @@ public class Board {
         board[7][5] = new Piece(true, PieceType.BISHOP);
 
         // white King and Queen initialized
-        board[7][7] = new Piece(true, PieceType.QUEEN);
+        board[7][4] = new Piece(true, PieceType.QUEEN);
         board[7][3] = new Piece(true, PieceType.KING);
 
     }
 
 
-    public Piece getPieceAtPosition(int y, int x){
+    public Piece getPieceAtPosition(int x, int y){
         return new Piece(board[y][x].isWhite(), board[y][x].getType());
     }
 
 
 
-    public boolean movePiece(int oldY, int oldX, int newY, int newX){
+    public boolean movePiece(int oldX, int oldY, int newX, int newY){
 
         if(isValid(oldX, oldY, newX, newY)){
 
@@ -162,22 +162,22 @@ public class Board {
 
     /**
      * Return distance between pair coordinates.
-     * @param xOne x-coordinate of first position.
-     * @param yOne y-coordinate of first position.
-     * @param xTwo x-coordinate of second position.
-     * @param yTwo y-coordinate of second position.
+     * @param startX x-coordinate of first position.
+     * @param startY y-coordinate of first position.
+     * @param finishX x-coordinate of second position.
+     * @param finishY y-coordinate of second position.
      * @return directional distance in terms of squares to get from (xOne, yOne) to (xTwo, yTwo);
      *         returns 0 if both coordinates are the same, or not a possible move.
      */
-    private int getDistance(int xOne, int yOne, int xTwo, int yTwo) {
-        if (xOne == xTwo) {
-            return yOne - yTwo;
-        } else if (yOne == yTwo) {
-            return xOne - xTwo;
+    private int getDistance(int startX, int startY, int finishX, int finishY) {
+        if (startX == finishX) {
+            return startY - finishY;
+        } else if (startY == finishY) {
+            return startX - finishX;
         } else {
             /* Check if they are diagonal coordinates. */
-            if (Math.abs(xOne - xTwo) == Math.abs(yOne - yTwo)) {
-                return Math.abs(xOne - xTwo);
+            if (Math.abs(startX - finishX) == Math.abs(startY - finishY)) {
+                return Math.abs(startX - finishX);
             }
 
             return 0;
@@ -187,13 +187,13 @@ public class Board {
     /**
      * Helper function to ensure a path has no collisions from coordinate (xOne, Yone) to (xTwo, yTwo) not-inclusive of end coordinate.
      * Assumes the movement path is valid (vertical, horizontal, or diagonal), and (xOne, Yone) != (xTwo, yTwo).
-     * @param xOne x-coordinate of first position.
-     * @param yOne y-coordinate of first position.
-     * @param xTwo x-coordinate of second position.
-     * @param yTwo y-coordinate of second position.
+     * @param startX x-coordinate of starting position.
+     * @param startY y-coordinate of starting position.
+     * @param finishX x-coordinate of finishing position.
+     * @param finishY y-coordinate of finishing position.
      * @return true if there are no collisions, false if there are collisions(s).
      */
-    private boolean noCollision(int xOne, int yOne, int xTwo, int yTwo) {
+    private boolean noCollision(int startX, int startY, int finishX, int finishY) {
         // TODO: Implement this.
         return false;
     }
