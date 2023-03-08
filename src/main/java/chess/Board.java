@@ -89,6 +89,7 @@ public class Board {
 
     /**
      * Check if a move is valid for the piece at (startX, startY) to (finishX, finishY).
+     * // FIXME: Does not consider special moves (castling or en passant).
      * @param startX x-coordinate of starting position.
      * @param startY y-coordinate of starting position.
      * @param finishX x-coordinate of finishing position.
@@ -115,26 +116,32 @@ public class Board {
                 /* Can move 1 space in all directions. */
                 return getDistance(startX, startY, finishX, finishY) == 1;
             case QUEEN:
-                /* Can move in all directions, unlimited spaces. */
-                break;
+                /* Can move in all directions, unlimited spaces, no collisions. */
+                return (getDistance(startX, startY, finishX, finishY) != 0) && noCollision(startX, startY, finishX, finishY);
             case BISHOP:
-                /* Can move only diagonally, unlimited spaces. */
-                break;
+                /* Can move only diagonally, unlimited spaces, no collisions. */
+                return startX != finishX && startY != finishY
+                        && getDistance(startX, startY, finishX, finishY) != 0 && noCollision(startX, startY, finishX, finishY);
             case ROOK:
-                break;
+                /* Can move only horizontally/vertically, unlimited spaces, no collisions. */
+                return (startX == finishX && startY != finishY) || (startX != finishX && startY == finishY)
+                        && getDistance(startX, startY, finishX, finishY) != 0
+                        && noCollision(startX, startY, finishX, finishY);
             case KNIGHT:
-                break;
+                /* Can move only in L-shape. */
+                return (Math.abs(finishX - startX) == 1 && Math.abs(finishY - startY) == 2)
+                        || (Math.abs(finishX - startX) == 2 && Math.abs(finishY - startY) == 1);
             case PAWN:
                 /* Can only move one or two spaces (if at starting position) in specified direction (depending on colour). */
                 if (movingPiece.isWhite()) { // Is a white piece.
                     /* Can only move diagonally one space if taking. */
                     if (movingPiece.isWhite() != board[finishY][finishX].isWhite() && board[finishY][finishX].getType() != PieceType.NOTHING) {
-                        return ((finishX == startX + 1) || (finishX == startX - 1)) && (finishY == startY - 1);
+                        return (Math.abs(finishX - startX) == 1) && (finishY == startY - 1);
                     }
 
-                    /* Otherwise, check if at starting position (can move 1-2 spaces vertically). */
+                    /* Otherwise, check if at starting position (can move 1-2 spaces vertically), no collisions. */
                     return (startY == 6 ? (getDistance(startX, startY, finishX, finishY) == 1
-                            || getDistance(startX, startY, finishX, finishY) == 2)
+                            || (getDistance(startX, startY, finishX, finishY) == 2) && noCollision(startX, startY, finishX, finishY))
                             : getDistance(startX, startY, finishX, finishY) == 1)
                             && (startY < finishY && startX == finishX);
                 } else { // Is a black piece.
@@ -143,9 +150,9 @@ public class Board {
                         return ((finishX == startX + 1) || (finishX == startX - 1)) && (finishY == startY + 1);
                     }
 
-                    /* Otherwise, check if at starting position (can move 1-2 spaces vertically). */
+                    /* Otherwise, check if at starting position (can move 1-2 spaces vertically), no collisions. */
                     return (startY == 6 ? (getDistance(startX, startY, finishX, finishY) == 1
-                            || getDistance(startX, startY, finishX, finishY) == 2)
+                            || (getDistance(startX, startY, finishX, finishY) == 2) && noCollision(startX, startY, finishX, finishY))
                             : getDistance(startX, startY, finishX, finishY) == 1)
                             && (startY > finishY && startX == finishX);
                 }
@@ -177,7 +184,17 @@ public class Board {
         }
     }
 
+    /**
+     * Helper function to ensure a path has no collisions from coordinate (xOne, Yone) to (xTwo, yTwo) not-inclusive of end coordinate.
+     * Assumes the movement path is valid (vertical, horizontal, or diagonal), and (xOne, Yone) != (xTwo, yTwo).
+     * @param xOne x-coordinate of first position.
+     * @param yOne y-coordinate of first position.
+     * @param xTwo x-coordinate of second position.
+     * @param yTwo y-coordinate of second position.
+     * @return true if there are no collisions, false if there are collisions(s).
+     */
     private boolean noCollision(int xOne, int yOne, int xTwo, int yTwo) {
+        // TODO: Implement this.
         return false;
     }
 }
