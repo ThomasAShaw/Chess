@@ -185,8 +185,8 @@ public class Board {
     }
 
     /**
-     * Helper function to ensure a path has no collisions from coordinate (xOne, Yone) to (xTwo, yTwo) not-inclusive of end coordinate.
-     * Assumes the movement path is valid (vertical, horizontal, or diagonal), and (xOne, Yone) != (xTwo, yTwo).
+     * Helper function to ensure a path has no collisions from coordinate (xOne, yOne) to (xTwo, yTwo) not-inclusive of end coordinate.
+     * Assumes the movement path is valid (vertical, horizontal, or diagonal), and (xOne, yOne) != (xTwo, yTwo).
      * @param startX x-coordinate of starting position.
      * @param startY y-coordinate of starting position.
      * @param finishX x-coordinate of finishing position.
@@ -194,7 +194,50 @@ public class Board {
      * @return true if there are no collisions, false if there are collisions(s).
      */
     private boolean noCollision(int startX, int startY, int finishX, int finishY) {
-        // TODO: Implement this.
-        return false;
+        if (finishX == startX) { // Horizontal move.
+            int yIncrement = (finishY > startY) ? 1 : -1;
+            int currY = startY + yIncrement;
+            while (yIncrement == 1 && currY < finishY
+                    || yIncrement == -1 && currY > finishY) {
+                if (getPieceAtPosition(startX, currY).getType() != PieceType.NOTHING) {
+                    return false;
+                }
+
+                currY += yIncrement;
+            }
+
+            return true;
+        } else if (finishY == startY) { // Vertical move.
+            int xIncrement = (finishX > startX) ? 1 : -1;
+            int currX = startX + xIncrement;
+            while (xIncrement == 1 && currX < finishX
+                    || xIncrement == -1 && currX > finishX) {
+                if (getPieceAtPosition(currX, startY).getType() != PieceType.NOTHING) {
+                    return false;
+                }
+
+                currX += xIncrement;
+            }
+
+            return true;
+        } else { // Diagonal move.
+            int xIncrement = (finishX > startX) ? 1 : -1;
+            int yIncrement = (finishY > startY) ? 1 : -1;
+            int currX = startX + xIncrement;
+            int currY = startY + yIncrement;
+
+            /* We can check one value as it'll drop out of the loop at the same time. */
+            while (xIncrement == 1 && currX < finishX
+                    || xIncrement == -1 && currX > finishX) {
+                if (getPieceAtPosition(currX, currY).getType() != PieceType.NOTHING) {
+                    return false;
+                }
+
+                currX += xIncrement;
+                currY += yIncrement;
+            }
+
+            return true;
+        }
     }
 }
