@@ -60,8 +60,8 @@ public class Board {
         board[7][5] = new Piece(true, PieceType.BISHOP);
 
         // white King and Queen initialized
-        board[7][4] = new Piece(true, PieceType.QUEEN);
-        board[7][3] = new Piece(true, PieceType.KING);
+        board[7][4] = new Piece(true, PieceType.KING);
+        board[7][3] = new Piece(true, PieceType.QUEEN);
 
     }
 
@@ -143,7 +143,7 @@ public class Board {
                     return (startY == 6 ? (getDistance(startX, startY, finishX, finishY) == 1
                             || (getDistance(startX, startY, finishX, finishY) == 2) && noCollision(startX, startY, finishX, finishY))
                             : getDistance(startX, startY, finishX, finishY) == 1)
-                            && (startY < finishY && startX == finishX);
+                            && (startY > finishY && startX == finishX);
                 } else { // Is a black piece.
                     /* Can only move diagonally one space if taking. */
                     if (movingPiece.isWhite() != board[finishY][finishX].isWhite() && board[finishY][finishX].getType() != PieceType.NOTHING) {
@@ -154,7 +154,7 @@ public class Board {
                     return (startY == 6 ? (getDistance(startX, startY, finishX, finishY) == 1
                             || (getDistance(startX, startY, finishX, finishY) == 2) && noCollision(startX, startY, finishX, finishY))
                             : getDistance(startX, startY, finishX, finishY) == 1)
-                            && (startY > finishY && startX == finishX);
+                            && (startY < finishY && startX == finishX);
                 }
         }
         return false;
@@ -169,7 +169,7 @@ public class Board {
      * @return directional distance in terms of squares to get from (xOne, yOne) to (xTwo, yTwo);
      *         returns 0 if both coordinates are the same, or not a possible move.
      */
-    private int getDistance(int startX, int startY, int finishX, int finishY) {
+    public int getDistance(int startX, int startY, int finishX, int finishY) {
         if (startX == finishX) {
             return startY - finishY;
         } else if (startY == finishY) {
@@ -193,7 +193,7 @@ public class Board {
      * @param finishY y-coordinate of finishing position.
      * @return true if there are no collisions, false if there are collisions(s).
      */
-    private boolean noCollision(int startX, int startY, int finishX, int finishY) {
+    public boolean noCollision(int startX, int startY, int finishX, int finishY) {
         if (finishX == startX) { // Horizontal move.
             int yIncrement = (finishY > startY) ? 1 : -1;
             int currY = startY + yIncrement;
