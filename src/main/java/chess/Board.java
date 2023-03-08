@@ -6,6 +6,8 @@ import java.util.List;
 public class Board {
     Piece[][] board = new Piece[8][8];
 
+    boolean whiteInCheck;
+    boolean blackInCheck;
     List<Piece> listOfDeadPieces = new ArrayList<>();
 
 
@@ -74,12 +76,17 @@ public class Board {
 
         if(isValid(int oldY, int oldX, int newY, int newX)){
 
+            if(board[newY][newX].getType()!= PieceType.NOTHING){
+                listOfDeadPieces.add(board[newY][newX]);
+            }
+
             board[newY][newX] = board[oldY][oldX];
             board[oldY][oldX] = new Piece(false, PieceType.NOTHING);
             return true;
         }
         return false;
     }
+
 
 
 }
