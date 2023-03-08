@@ -64,11 +64,22 @@ public class Board {
     }
 
 
+    public Piece getPieceAtPosition(int y, int x){
+        return new Piece(board[y][x].isWhite(), board[y][x].getType());
+    }
 
 
 
+    public boolean movePiece(int oldY, int oldX, int newY, int newX){
 
+        if(isValid(int oldY, int oldX, int newY, int newX)){
 
+            board[newY][newX] = board[oldY][oldX];
+            board[oldY][oldX] = new Piece(false, PieceType.NOTHING);
+            return true;
+        }
+        return false;
+    }
 
 
 }

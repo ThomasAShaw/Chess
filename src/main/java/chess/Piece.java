@@ -18,7 +18,7 @@ public class Piece {
      * Return colour of piece.
      * @return true if piece is white, false otherwise.
      */
-    public boolean getColour() {
+    public boolean isWhite() {
         return isWhite;
     }
 
