@@ -6,7 +6,7 @@ import java.util.List;
 public class Board {
     Piece[][] board = new Piece[8][8];
 
-    List<Piece> listOfDeadPiece = new ArrayList<>();
+    List<Piece> listOfDeadPieces = new ArrayList<>();
 
 
 
