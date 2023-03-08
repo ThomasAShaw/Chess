@@ -1,11 +1,19 @@
 package chess;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTests {
+    public static Board board;
+    @BeforeAll
+    public static void setup(){
+        board = new Board();
+    }
+
+
     @Test
     public void testPiece() {
         Piece myPiece = new Piece(true, PieceType.KNIGHT);
@@ -74,16 +82,26 @@ public class BoardTests {
     }
 
     @Test
+    @Order(1)
     public void testValidFirstPawnMove() {
-        Board board = new Board();
 
         assertTrue(board.isValid(0,6, 0, 4));
         assertFalse(board.isValid(0,6, 1, 4));
         board.movePiece(0,6, 0, 4);
 
+    }
+
+    @Test
+    @Order(2)
+    public void testInValidKingMove(){
         // move king randomly
         assertFalse(board.isValid(4,7, 5, 5));
+    }
 
+
+    @Test
+    @Order(3)
+    public void testKnightMove(){
         // move knight to
         assertFalse(board.isValid(6,7, 1, 1));
 
@@ -92,18 +110,27 @@ public class BoardTests {
         board.movePiece(6,7, 5, 5);
         assertEquals(board.getPieceAtPosition(5, 5).getType(), PieceType.KNIGHT );
 
+    }
+
+    @Test
+    @Order(4)
+    public void testQueenMoveWithPwnInWay(){
         // move queen with pawn in the way
         assertFalse(board.isValid(3,7, 3, 4));
         assertTrue(board.movePiece(3,6, 3, 4));
         assertFalse(board.isValid(3,7, 3, 4));
+    }
+    @Test
+    @Order(5)
+    public void testQueenMoveValid(){
 
-
+        board.getPieceAtPosition(3, 5);
         assertTrue(board.isValid(3,7, 3, 5));
+
         assertTrue(board.movePiece(3,7, 3, 5));
         // queen moved from here
         assertEquals(board.getPieceAtPosition(3, 7).getType(), PieceType.NOTHING );
 
         assertEquals(board.getPieceAtPosition(3, 5).getType(), PieceType.QUEEN );
-
     }
 }
