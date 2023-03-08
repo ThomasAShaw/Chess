@@ -74,7 +74,7 @@ public class Board {
 
     public boolean movePiece(int oldY, int oldX, int newY, int newX){
 
-        if(isValid(int oldY, int oldX, int newY, int newX)){
+        if(isValid(oldX, oldY, newX, newY)){
 
             if(board[newY][newX].getType()!= PieceType.NOTHING){
                 listOfDeadPieces.add(board[newY][newX]);
@@ -105,7 +105,7 @@ public class Board {
         Piece movingPiece = board[startY][startX];
 
         /* Check movingPiece does not end on piece of same colour. */
-        if (board[finishY][finishX].getColour() == movingPiece.getColour()
+        if (board[finishY][finishX].isWhite() == movingPiece.isWhite()
                 && board[finishY][finishX].getType() != PieceType.NOTHING) {
             return false;
         }
@@ -149,9 +149,8 @@ public class Board {
                             : getDistance(startX, startY, finishX, finishY) == 1)
                             && (startY > finishY && startX == finishX);
                 }
-            default:
-                return false;
         }
+        return false;
     }
 
     /**
