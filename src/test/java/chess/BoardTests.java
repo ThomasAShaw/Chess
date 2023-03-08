@@ -6,8 +6,72 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTests {
+    @Test
+    public void testPiece() {
+        Piece myPiece = new Piece(true, PieceType.KNIGHT);
+        assertTrue(myPiece.isWhite());
+        assertEquals(myPiece.getType(), PieceType.KNIGHT);
+    }
 
+    @Test
+    public void testBoardConstructor() {
+        Board myBoard = new Board();
 
+        assertEquals(myBoard.getPieceAtPosition(0,0), new Piece(false, PieceType.ROOK));
+        assertEquals(myBoard.getPieceAtPosition(1,0), new Piece(false, PieceType.KNIGHT));
+        assertEquals(myBoard.getPieceAtPosition(2,0), new Piece(false, PieceType.BISHOP));
+        assertEquals(myBoard.getPieceAtPosition(3,0), new Piece(false, PieceType.QUEEN));
+        assertEquals(myBoard.getPieceAtPosition(4,0), new Piece(false, PieceType.KING));
+        assertEquals(myBoard.getPieceAtPosition(5,0), new Piece(false, PieceType.BISHOP));
+        assertEquals(myBoard.getPieceAtPosition(6,0), new Piece(false, PieceType.KNIGHT));
+        assertEquals(myBoard.getPieceAtPosition(7,0), new Piece(false, PieceType.ROOK));
+
+        for (int i = 0; i < 8; i++) {
+            assertEquals(myBoard.getPieceAtPosition(i,1), new Piece(false, PieceType.PAWN));
+        }
+
+        for (int y = 2; y < 6; y++) {
+            for (int x = 0; x < 8; x++) {
+                assertEquals(myBoard.getPieceAtPosition(x, y).getType(), PieceType.NOTHING);
+            }
+        }
+
+        for (int i = 0; i < 8; i++) {
+            assertEquals(myBoard.getPieceAtPosition(i,6), new Piece(true, PieceType.PAWN));
+        }
+
+        assertEquals(myBoard.getPieceAtPosition(0,7), new Piece(true, PieceType.ROOK));
+        assertEquals(myBoard.getPieceAtPosition(1,7), new Piece(true, PieceType.KNIGHT));
+        assertEquals(myBoard.getPieceAtPosition(2,7), new Piece(true, PieceType.BISHOP));
+        assertEquals(myBoard.getPieceAtPosition(3,7), new Piece(true, PieceType.QUEEN));
+        assertEquals(myBoard.getPieceAtPosition(4,7), new Piece(true, PieceType.KING));
+        assertEquals(myBoard.getPieceAtPosition(5,7), new Piece(true, PieceType.BISHOP));
+        assertEquals(myBoard.getPieceAtPosition(6,7), new Piece(true, PieceType.KNIGHT));
+        assertEquals(myBoard.getPieceAtPosition(7,7), new Piece(true, PieceType.ROOK));
+    }
+
+    @Test
+    public void testInvalidPosition() {
+        Board myBoard = new Board();
+        assertThrows(RuntimeException.class, () -> myBoard.getPieceAtPosition(0, -1));
+        assertThrows(RuntimeException.class, () -> myBoard.getPieceAtPosition(9, 0));
+    }
+
+    @Test
+    public void testIsValidOutOfBounds() {
+        Board myBoard = new Board();
+
+        assertFalse (myBoard.isValid(0, -1, 0, 5));
+        assertFalse (myBoard.isValid(Integer.MIN_VALUE, 3, 1, 3));
+        assertFalse (myBoard.isValid(7, 6, 7, -55));
+        assertFalse (myBoard.isValid(-19234, -11, -98, -55));
+
+        assertFalse(myBoard.isValid(Integer.MAX_VALUE, 0, Integer.MAX_VALUE, Integer.MAX_VALUE));
+        assertFalse(myBoard.isValid(8, 8, 8, 8));
+        assertFalse(myBoard.isValid(0, 2, 6, 8));
+        assertFalse(myBoard.isValid(1, 1, 1, -1));
+
+    }
 
     @Test
     public void testValidFirstPawnMove() {
@@ -42,11 +106,4 @@ public class BoardTests {
         assertEquals(board.getPieceAtPosition(3, 5).getType(), PieceType.QUEEN );
 
     }
-
-
-
-
-
-
-
 }

@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Objects;
+
 public class Piece {
     private final boolean isWhite;
     private final PieceType type;
@@ -28,5 +30,18 @@ public class Piece {
      */
     public PieceType getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Piece piece = (Piece) o;
+        return isWhite == piece.isWhite && type == piece.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isWhite, type);
     }
 }

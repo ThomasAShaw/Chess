@@ -4,32 +4,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    Piece[][] board = new Piece[8][8];
+    /*
+     * Represents a chess board of size 8 x 8, with white at the bottom and black on top.
+     */
+    private final Piece[][] board = new Piece[8][8];
 
-    boolean whiteInCheck;
-    boolean blackInCheck;
-    List<Piece> listOfDeadPieces = new ArrayList<>();
+    private boolean whiteInCheck;
+    private boolean blackInCheck;
+    private List<Piece> deadPieces = new ArrayList<>();
 
 
+    /**
+     * Initializes a new board object, with default piece placements and an 8 x 8 size.
+     */
     public Board(){
-
-        // Black Rooks initialize
+        // Black rooks initialize
         board[0][0] = new Piece(false, PieceType.ROOK);
         board[0][7] = new Piece(false, PieceType.ROOK);
 
-        // Black Knights initialize
+        // Black knights initialize
         board[0][1] = new Piece(false, PieceType.KNIGHT);
         board[0][6] = new Piece(false, PieceType.KNIGHT);
 
-        // Black Bishops initialize
+        // Black bishops initialize
         board[0][2] = new Piece(false, PieceType.BISHOP);
         board[0][5] = new Piece(false, PieceType.BISHOP);
 
-        // Black King and Queen initialized
+        // Black king and queen initialized
         board[0][3] = new Piece(false, PieceType.QUEEN);
         board[0][4] = new Piece(false, PieceType.KING);
 
-        // Black pwns initialized
+        // Black pawns initialized
         for(int i = 0; i < 8; i++){
             Piece blackPawn = new Piece(false, PieceType.PAWN);
             board[1][i] = blackPawn;
@@ -41,43 +46,57 @@ public class Board {
                 board[j][i] = NullPiece;
             }
         }
-        // White pwns initialized
+        // White pawns initialized
         for(int i = 0; i < 8; i++){
             Piece whitePawn = new Piece(true, PieceType.PAWN);
             board[6][i] = whitePawn;
         }
 
-        // white Rooks initialize
+        // White rooks initialize
         board[7][7] = new Piece(true, PieceType.ROOK);
         board[7][0] = new Piece(true, PieceType.ROOK);
 
-        // white Knights initialize
+        // White knights initialize
         board[7][1] = new Piece(true, PieceType.KNIGHT);
         board[7][6] = new Piece(true, PieceType.KNIGHT);
 
-        // white Bishops initialize
+        // White bishops initialize
         board[7][2] = new Piece(true, PieceType.BISHOP);
         board[7][5] = new Piece(true, PieceType.BISHOP);
 
-        // white King and Queen initialized
-        board[7][4] = new Piece(true, PieceType.KING);
+        // White king and queen initialized
         board[7][3] = new Piece(true, PieceType.QUEEN);
+        board[7][4] = new Piece(true, PieceType.KING);
 
     }
 
-
+    /**
+     * Gets the piece at position (x,y) on this board, where
+     * (0,0) represents top left and (7,7) represents bottom right;
+     * assumes that 0 <= x <= 7 and 0 <= y <= 7.
+     * @param x x-coordinate of position.
+     * @param y y-coordinate of position.
+     * @return piece at position (x,y) on this board.
+     */
     public Piece getPieceAtPosition(int x, int y){
         return new Piece(board[y][x].isWhite(), board[y][x].getType());
     }
 
-
-
+    /**
+     * Move a piece from (oldX, oldY) to (newX, newY),where
+     * (0,0) represents top left and (7,7) represents bottom right.
+     * @param oldX x-coordinate of first position (to move from).
+     * @param oldY y-coordinate of first position (to move from).
+     * @param newX x-coordinate of second position (to move to).
+     * @param newY y-coordinate of second position (to move to).
+     * @return true if move was successful, false otherwise.
+     */
     public boolean movePiece(int oldX, int oldY, int newX, int newY){
 
         if(isValid(oldX, oldY, newX, newY)){
 
             if(board[newY][newX].getType()!= PieceType.NOTHING){
-                listOfDeadPieces.add(board[newY][newX]);
+                deadPieces.add(board[newY][newX]);
             }
 
             board[newY][newX] = board[oldY][oldX];
@@ -143,7 +162,7 @@ public class Board {
                     return (startY == 6 ? (getDistance(startX, startY, finishX, finishY) == 1
                             || (getDistance(startX, startY, finishX, finishY) == 2) && noCollision(startX, startY, finishX, finishY))
                             : getDistance(startX, startY, finishX, finishY) == 1)
-                            && (startY > finishY && startX == finishX);
+                            && (startY < finishY && startX == finishX);
                 } else { // Is a black piece.
                     /* Can only move diagonally one space if taking. */
                     if (movingPiece.isWhite() != board[finishY][finishX].isWhite() && board[finishY][finishX].getType() != PieceType.NOTHING) {
@@ -154,14 +173,14 @@ public class Board {
                     return (startY == 6 ? (getDistance(startX, startY, finishX, finishY) == 1
                             || (getDistance(startX, startY, finishX, finishY) == 2) && noCollision(startX, startY, finishX, finishY))
                             : getDistance(startX, startY, finishX, finishY) == 1)
-                            && (startY < finishY && startX == finishX);
+                            && (startY > finishY && startX == finishX);
                 }
         }
         return false;
     }
 
     /**
-     * Return distance between pair coordinates.
+     * Return distance between a pair of coordinates.
      * @param startX x-coordinate of first position.
      * @param startY y-coordinate of first position.
      * @param finishX x-coordinate of second position.
@@ -169,7 +188,7 @@ public class Board {
      * @return directional distance in terms of squares to get from (xOne, yOne) to (xTwo, yTwo);
      *         returns 0 if both coordinates are the same, or not a possible move.
      */
-    public int getDistance(int startX, int startY, int finishX, int finishY) {
+    private int getDistance(int startX, int startY, int finishX, int finishY) {
         if (startX == finishX) {
             return startY - finishY;
         } else if (startY == finishY) {
@@ -193,7 +212,7 @@ public class Board {
      * @param finishY y-coordinate of finishing position.
      * @return true if there are no collisions, false if there are collisions(s).
      */
-    public boolean noCollision(int startX, int startY, int finishX, int finishY) {
+    private boolean noCollision(int startX, int startY, int finishX, int finishY) {
         if (finishX == startX) { // Horizontal move.
             int yIncrement = (finishY > startY) ? 1 : -1;
             int currY = startY + yIncrement;
