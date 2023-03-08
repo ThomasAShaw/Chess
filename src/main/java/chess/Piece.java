@@ -1,8 +1,8 @@
 package chess;
 
 public class Piece {
-    boolean isWhite;
-    PieceType type;
+    private final boolean isWhite;
+    private final PieceType type;
 
     /**
      * Initialize a new piece object.
